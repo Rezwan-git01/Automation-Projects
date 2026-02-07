@@ -1,0 +1,1392 @@
+{
+  "name": "Jobs Newsletter Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ce67efe8-8603-4782-8430-773742da7a76",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "393d152d-5348-49bb-a18e-405683886931",
+      "name": "Webhook",
+      "webhookId": "ce67efe8-8603-4782-8430-773742da7a76"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y",
+          "mode": "list",
+          "cachedResultName": "Newslatter Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Email",
+              "lookupValue": "={{ $json.body.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        176,
+        0
+      ],
+      "id": "293c28a6-7a6f-4d5a-ab45-b8263fdf9c5a",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OypZtHBILuVcUI9u",
+          "name": "Google Sheets account 325"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6f445165-4dd3-43aa-b90b-88743abea45d",
+              "leftValue": "={{ $json.row_number }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        384,
+        0
+      ],
+      "id": "921cc1a1-254c-427a-a1b8-35f11a6a6e4b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "You are already subscribed to JOBS 4 U",
+        "emailType": "text",
+        "message": "Hi,\nYou are already a subscribed person of JOBS 4 U",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        -400
+      ],
+      "id": "e996f5e5-8c60-4643-91e8-14bf410d3baa",
+      "name": "Send a message",
+      "webhookId": "408961d4-4c76-43b4-a254-aac6b56ad71d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4tkr7krRxlTVGOM5",
+          "name": "Gmail account 314"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "User already exist",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        880,
+        -400
+      ],
+      "id": "c1643fca-3e84-4a86-bd91-b5137356e2cd",
+      "name": "Respond to Webhook",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        144,
+        -288
+      ],
+      "id": "6b90d89f-39a1-4786-b81a-00bde467bc92",
+      "name": "Send email",
+      "webhookId": "35fdeafe-ffac-4248-b4a5-60fd42c1e7b5"
+    },
+    {
+      "parameters": {
+        "url": "https://api.mails.so/v1/validate",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $('Webhook').item.json.body.email }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-mails-api-key"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        592,
+        160
+      ],
+      "id": "a65ae8aa-0a5f-470c-b4cc-109ee87dfad6",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a0a7a099-b9cd-47c0-a7dd-746b0847b118",
+              "leftValue": "={{ $json.data.mx_record }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        752,
+        160
+      ],
+      "id": "4b5515d0-4253-4072-b60e-4ee1689091b4",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y",
+          "mode": "list",
+          "cachedResultName": "Newslatter Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Webhook').item.json.body.name }}",
+            "Email": "={{ $('Webhook').item.json.body.email }}",
+            "Date": "={{ $now }}",
+            "Subscribe Status": "Subscribed"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Subscribe Status",
+              "displayName": "Subscribe Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        880,
+        -176
+      ],
+      "id": "4e9736a8-b526-4612-bbb0-9e20b6d0c36b",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OypZtHBILuVcUI9u",
+          "name": "Google Sheets account 325"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y",
+          "mode": "list",
+          "cachedResultName": "Newslatter Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1249726367,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit#gid=1249726367"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Webhook').item.json.body.name }}",
+            "Email ": "={{ $('Webhook').item.json.body.email }}"
+          },
+          "matchingColumns": [
+            "Email "
+          ],
+          "schema": [
+            {
+              "id": "Email ",
+              "displayName": "Email ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1072,
+        -96
+      ],
+      "id": "d2785c37-1151-4a89-a8c4-4aa9b387d5e0",
+      "name": "Append or update row in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OypZtHBILuVcUI9u",
+          "name": "Google Sheets account 325"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.data.email }}",
+        "subject": "You have already subscribed perfectly",
+        "emailType": "text",
+        "message": "You have already subscribed perfectly.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1264,
+        -64
+      ],
+      "id": "0fa39174-bc81-4fef-b7b2-4d57654fabf7",
+      "name": "Send a message1",
+      "webhookId": "37b26bab-320e-4c9e-85f4-191f2dd3ebfc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4tkr7krRxlTVGOM5",
+          "name": "Gmail account 314"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1520,
+        -208
+      ],
+      "id": "cc6d4460-ce09-4467-9e60-2cc937f248ee",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "This email in not valid.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        960,
+        256
+      ],
+      "id": "e88edbe3-3ced-4bfb-a9d5-d114a571cbf8",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "You have been successfully subscribed.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1728,
+        -208
+      ],
+      "id": "b84284d7-63d5-4911-bd68-7357175e92dc",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "height": 832,
+        "width": 1968
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -416
+      ],
+      "typeVersion": 1,
+      "id": "470b7de7-320c-45d6-87af-20fbda437fd3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "6e7c0705-b8e6-41a0-9e29-eea9f92d9448",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        576
+      ],
+      "id": "d0fbaab8-a9fb-4d88-9ec1-309b006a39ba",
+      "name": "Webhook1",
+      "webhookId": "6e7c0705-b8e6-41a0-9e29-eea9f92d9448"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y",
+          "mode": "list",
+          "cachedResultName": "Newslatter Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Email",
+              "lookupValue": "={{ $json.body.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        576
+      ],
+      "id": "88962a75-fab0-4b5e-972d-e79db282b788",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OypZtHBILuVcUI9u",
+          "name": "Google Sheets account 325"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y",
+          "mode": "list",
+          "cachedResultName": "Newslatter Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.Email }}",
+            "Subscribe Status": "Unubscribed"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Subscribe Status",
+              "displayName": "Subscribe Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        576
+      ],
+      "id": "9c5fcfd8-f18a-4128-ad2d-9ba0419ed9be",
+      "name": "Append or update row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OypZtHBILuVcUI9u",
+          "name": "Google Sheets account 325"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y",
+          "mode": "list",
+          "cachedResultName": "Newslatter Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 858678619,
+          "mode": "list",
+          "cachedResultName": "Sheet3",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit#gid=858678619"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.Email }}",
+            "Name": "={{ $('Get row(s) in sheet1').item.json.Name }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        448
+      ],
+      "id": "b6d51754-2b09-423d-ba00-5cb57a5f1a5c",
+      "name": "Append or update row in sheet3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OypZtHBILuVcUI9u",
+          "name": "Google Sheets account 325"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y",
+          "mode": "list",
+          "cachedResultName": "Newslatter Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1249726367,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit#gid=1249726367"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        640
+      ],
+      "id": "4da0e222-c823-4c2a-bab2-6ea5f63e2eea",
+      "name": "Delete rows or columns from sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OypZtHBILuVcUI9u",
+          "name": "Google Sheets account 325"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1360,
+        560
+      ],
+      "id": "b8b90569-aef9-4a5f-bbcd-4e8a4272431f",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "You successfully unsubscribed",
+        "emailType": "text",
+        "message": "Hi,\nYou successfully unsubscribed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1088,
+        480
+      ],
+      "id": "4748c540-73cb-4258-bcfa-34594a41b0ad",
+      "name": "Send a message2",
+      "webhookId": "02917e03-1bf3-4d4b-813e-d5f95cbed202",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4tkr7krRxlTVGOM5",
+          "name": "Gmail account 314"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1568,
+        560
+      ],
+      "id": "3745c706-3fd9-43bd-8dd4-1284947856f0",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        1008
+      ],
+      "id": "2bab1c0d-cb3c-4a2b-a6b6-475d6b50b9ad",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y",
+          "mode": "list",
+          "cachedResultName": "Newslatter Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TlwhX9-VDnMw11b-iyIY85wOX7v3XL3EEHGKGnR0h9Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        320,
+        1008
+      ],
+      "id": "5b23e44e-5460-4508-8e75-05ac2d5ee7df",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OypZtHBILuVcUI9u",
+          "name": "Google Sheets account 325"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "40cdb353-b152-4e30-99ef-c6910826a0dd",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        528,
+        1008
+      ],
+      "id": "f33020c8-cae3-422e-9744-193077c7fcdf",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jobs-search-api.p.rapidapi.com/getjobs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host"
+            },
+            {
+              "name": "x-rapidapi-key"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"search_term\": \"web\",\n  \"location\": \"remote\",\n  \"results_wanted\": 1,\n  \"site_name\": [\n    \"indeed\",\n    \"linkedin\",\n    \"zip_recruiter\",\n    \"glassdoor\"\n  ],\n  \"distance\": 50,\n  \"job_type\": \"fulltime\",\n  \"is_remote\": true,\n  \"linkedin_fetch_description\": false,\n  \"hours_old\": 72\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        736,
+        912
+      ],
+      "id": "06e3e768-4344-43e9-833f-d82d828aa26d",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        976,
+        912
+      ],
+      "id": "9738c45d-0aaa-4375-a0cb-c8b280bdc0ec",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('HTTP Request1').item.json.jobs[0] }}\nexplain the details well organisedly.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1296,
+        880
+      ],
+      "id": "d80b5ac8-42bb-4ef7-89e0-adb972e49a82",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1552,
+        1072
+      ],
+      "id": "f88b892c-cadf-4bca-8825-0962c460c575",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "trfCIoo4zy3VwQ3q",
+          "name": "Groq account 30"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1648,
+        848
+      ],
+      "id": "b18e7f76-3477-4030-8456-b4b7de33ad6e",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1552,
+        1216
+      ],
+      "id": "ded667f5-8b42-4df6-a4cb-610313c6be8e",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1872,
+        976
+      ],
+      "id": "2868142a-7fd6-4cbb-a535-4b1f21c963b1",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- Get Merge2 data safely ----\nconst mergeItems = $items(\"Merge2\") || [];\nconst jobs = mergeItems[0]?.json?.data || [];\n\n// ---- Optional sheet data ----\nconst sheet = $items(\"Get row(s) in sheet2\", 0, 0)?.json || {};\nconst userName = sheet.Name || \"there\";\nconst userEmail = sheet[\"Email Address\"] || \"\";\n\nlet html = \"\";\n\nfor (let i = 0; i < Math.min(jobs.length, 10); i++) {\n  const j = jobs[i];\n\n  html += `\n  <div style=\"border:1px solid #e5e7eb;padding:15px;margin-bottom:15px\">\n    <h3>${j.title || \"Job Title\"}</h3>\n    <p><b>${j.company || \"\"}</b> • ${j.location || \"\"}</p>\n    <small>Posted: ${j.date_posted || \"\"}</small>\n    <p>${j.description || \"No description available\"}</p>\n    <p><b>${j.currency || \"\"} ${j.min_amount || \"\"} - ${j.max_amount || \"\"}</b></p>\n    <a href=\"${j.job_url || \"#\"}\">Apply Now</a>\n  </div>`;\n}\n\nreturn {\n  htmlNewsletter: html,\n  toEmail: userEmail,\n  userName\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2112,
+        976
+      ],
+      "id": "262d4ca3-ae67-4beb-8c8d-de69ae001e07",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "errorMessage": "An error accurd"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        944,
+        1184
+      ],
+      "id": "ada69b3d-8cda-4a21-a52e-2dfa98ea730b",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get row(s) in sheet2').item.json.Email }}",
+        "subject": "=New job has published.",
+        "message": "={{ $json.htmlNewsletter }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2336,
+        960
+      ],
+      "id": "fe237bda-ecd5-4d28-a948-3c87022dbfb0",
+      "name": "Send a message3",
+      "webhookId": "757192b0-f656-4902-9710-97295cf806dc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4tkr7krRxlTVGOM5",
+          "name": "Gmail account 314"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "height": 384,
+        "width": 1792,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "a5d504c8-d304-4f21-ad80-d3301b6982c7",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "height": 608,
+        "width": 2528,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "e8b7c87c-c766-4111-8d31-1d8f4b64a215",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append or update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete rows or columns from sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet3": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete rows or columns from sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "37b63158-2072-40d3-9b5e-22b92cb0d67d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f00bba974abf03cb5183d4d65f8a9645a781b04770df6a7d08284fca87d50b3"
+  },
+  "id": "hGiOqScE48xkgQ1R",
+  "tags": []
+}
