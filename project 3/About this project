@@ -1,0 +1,9 @@
+This n8n workflow automates turning a PDF into a WordPress blog post with a human approval step. First, it starts with a form where the user uploads a PDF
+file, then it extracts all text from the PDF. That extracted text is sent to an OpenAI model using a detailed prompt that converts the PDF content into a 
+well-structured, SEO-friendly blog post (the prompt is written for Bangla, but it also includes an instruction to always output in English). After the blog
+content is generated, a JavaScript code node formats the output and creates clean fields like `title` and `content`, then an IF node checks that both are 
+not empty. Next, the workflow sends the blog draft to Gmail using a “send and wait for response” approval system, meaning the post will only publish if the
+user approves it within a set time limit. If approved, the workflow creates a new WordPress post using the generated title, and also generates a featured
+image using Pollinations AI via an HTTP request (the later HTTP nodes look like placeholders for posting/setting the image). Overall, this automation makes
+it easy to upload a PDF and hooking it into a full blog publishing pipeline with AI writing + human-in-the-loop approval. 
+
