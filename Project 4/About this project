@@ -1,0 +1,4 @@
+This n8n workflow automates a **jobs newsletter system** by collecting job opportunities, formatting them into a clean newsletter, and sending them to subscribers automatically. It typically works by
+triggering on a schedule (daily/weekly), then pulling job listings from one or multiple sources (like APIs, websites, Google Sheets, Airtable, or Notion). After collecting the job data, the workflow
+cleans and organizes it, removes duplicates, and uses an AI or formatting step to turn the raw listings into a readable email-style newsletter with proper sections, titles, and links. Finally, it sends
+the newsletter through an email service (like Gmail, SendGrid, Mailchimp, etc.) to your mailing list, making the whole process fully automated without manual writing or copying. 
