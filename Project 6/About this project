@@ -1,0 +1,6 @@
+This n8n workflow creates a **Telegram-based Stock Analysis Agent** that can chat with users about the stock market and also generate technical chart analysis when a ticker is provided. The workflow starts
+when a user sends a message to the Telegram bot, then an AI Agent (powered by Google Gemini) responds in a professional and friendly way, explaining stock concepts without giving direct “buy/sell” financial
+advice. If the user requests technical analysis for a specific stock ticker, the agent calls a connected tool named **GetChart**, which triggers a second workflow that generates a TradingView-style chart 
+using the Chart-Img API (including indicators like Volume and MACD). The chart is then downloaded and analyzed using an OpenAI Vision model (GPT-4o-mini) with a detailed technical-analysis prompt to extract
+insights like trend direction, candlestick patterns, support/resistance, volume behavior, and MACD signals. Finally, the workflow sends the stock chart image back to Telegram and also prepares the AI-generated
+analysis text, making it a complete automated stock discussion + technical analysis assistant inside Telegram. 
