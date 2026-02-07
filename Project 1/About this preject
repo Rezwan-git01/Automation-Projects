@@ -1,0 +1,4 @@
+This n8n workflow builds a custom RAG chatbot for any website by connecting Google Drive, Pinecone, and OpenAI. When you upload a new file into a specific
+Google Drive folder, the workflow automatically downloads it, converts it into AI-readable text, creates embeddings using OpenAI, and stores them in a 
+Pinecone vector database. Then, when a user sends a message through the website chat trigger, an AI Agent (using GPT-4.1-mini + memory) searches Pinecone
+for the most relevant document information and replies with an accurate answer based on the uploaded files.
