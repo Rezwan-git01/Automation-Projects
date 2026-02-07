@@ -1,0 +1,7 @@
+This n8n workflow automates invoice handling from email to reporting. It continuously checks Gmail every minute for new emails that contain **PDF attachments**, 
+then collects all attachments, splits them one by one, and uploads each PDF into a selected Google Drive folder for storage. After uploading, it downloads the 
+same file again and extracts the text from the PDF. Next, an OpenAI model first checks if the extracted text is actually an invoice (returns only “yes” or “no”). 
+If it is **not** an invoice, the workflow deletes the uploaded file from Google Drive to keep things clean. If it **is** an invoice, an AI Agent extracts key 
+details like the customer name, company name, invoice amount, and a short description in strict JSON format. Finally, the workflow saves this structured invoice
+data into a Notion database and sends a professional email report containing the invoice details to a chosen email address. 
+
