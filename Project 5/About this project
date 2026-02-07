@@ -1,0 +1,5 @@
+This n8n workflow creates a simple **mobile app / Telegram AI assistant** that can handle both text messages and images. It starts when a user sends a message to your Telegram bot (or through the webhook),
+then a Switch node checks whether the message contains normal text or a photo. If it’s a text message, the workflow saves the text and sends it directly to an AI Agent. If it’s an image, it first downloads
+the image, then uses an OpenAI Vision model (GPT-4o-mini) to analyze the image and generate a detailed description (including objects, environment, and any text inside the image). That image analysis is
+then combined with the user’s message and passed into an AI Agent powered by Groq (Llama 3.1 8B) with a memory window of the last 10 messages, so the bot can reply in a conversational way. Finally, the
+assistant sends the final AI response back to the user on Telegram, making it a complete chat + vision assistant that works like a lightweight mobile support bot. 
