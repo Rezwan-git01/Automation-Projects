@@ -1,0 +1,3 @@
+This n8n workflow automates a complete travel lead funnel by integrating AI-driven personalization with CRM management. Upon a JotForm submission, an AI Agent powered by Google Gemini processes the user's
+travel data, logs it into Google Sheets, and generates tailored hotel and restaurant suggestions. The system then sends an interactive email and pauses until the user replies with their choice. Once a 
+selection is made, the workflow automatically updates the database and creates a warm lead in Zoho CRM for final booking and follow-up.
