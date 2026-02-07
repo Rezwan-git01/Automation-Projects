@@ -42,17 +42,17 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1gsAKO3wjeJzAbzITTz8oseOAOD2Ro4Owk51V68jBuw8",
+          "value": "YOUR_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Hotel Booking",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gsAKO3wjeJzAbzITTz8oseOAOD2Ro4Owk51V68jBuw8/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gsAKO3wjeJzAbzITTz8oseOAOD2Ro4Owk51V68jBuw8/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -162,7 +162,7 @@
         1312,
         1440
       ],
-      "id": "8fba77e0-e991-41d2-a793-2582e688f7b2",
+      "id": "YOUR_SHEET_ID",
       "name": "hotel_sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -181,9 +181,9 @@
         672,
         1152
       ],
-      "id": "4c0f7658-fe13-4e5a-8f49-62bed1f9666a",
+      "id": "instanceId",
       "name": "User Input",
-      "webhookId": "648edf02-dd86-431c-b877-190265ae8bc9",
+      "webhookId": "webhookId",
       "credentials": {
         "jotFormApi": {
           "id": "EWa2hCpiaVteSdbT",
@@ -271,9 +271,9 @@
         1536,
         1152
       ],
-      "id": "0121cb91-cf6b-43bc-96d9-f0e33bf49cfc",
+      "id": "YOUR_SHEET_ID",
       "name": "Send message and wait for response",
-      "webhookId": "de4b1ca9-3ac2-4fca-ac0b-3d964a29e0d3",
+      "webhookId": "webhookId",
       "credentials": {
         "gmailOAuth2": {
           "id": "q4pDppvyl3DBQtmI",
@@ -286,17 +286,17 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "1gsAKO3wjeJzAbzITTz8oseOAOD2Ro4Owk51V68jBuw8",
+          "value": "YOUR_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Hotel Booking",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gsAKO3wjeJzAbzITTz8oseOAOD2Ro4Owk51V68jBuw8/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit."
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gsAKO3wjeJzAbzITTz8oseOAOD2Ro4Owk51V68jBuw8/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit."
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -409,11 +409,11 @@
         1744,
         1152
       ],
-      "id": "88517738-3b5d-4b87-9a30-bc01a04f3383",
+      "id": "YOUR_SHEET_ID",
       "name": "Update row in sheet",
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "TRwA1bxw56PfCFTi",
+        "instanceId": {
+          "id": "YOUR_SHEET_ID",
           "name": "Google Sheets account"
         }
       }
@@ -437,7 +437,7 @@
         1952,
         1152
       ],
-      "id": "b4f9794e-445b-4730-bef1-1a8a5b9cf978",
+      "id": "YOUR_SHEET_ID",
       "name": "Create a lead",
       "credentials": {
         "zohoOAuth2Api": {
