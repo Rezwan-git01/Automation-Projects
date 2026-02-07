@@ -1,0 +1,608 @@
+{
+  "name": "Invoice Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "has:attachment filename:pdf"
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f2494815-ed09-458f-943e-261013293ee7",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4tkr7krRxlTVGOM5",
+          "name": "Gmail account 314"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "16635b05-a1e2-4308-bbdf-fe6c8a3962e0",
+              "name": "attachments",
+              "value": "={{ $('Gmail Trigger').item.binary.keys() }}",
+              "type": "array"
+            },
+            {
+              "id": "6491bf88-45de-4065-8030-4cf12bf772be",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        288,
+        -112
+      ],
+      "id": "bd445a9a-83c2-420f-acfd-16f0f6c930aa",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "attachments",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        528,
+        -112
+      ],
+      "id": "68a973a0-6556-4d29-95dd-176277e6a1d1",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        768,
+        -16
+      ],
+      "id": "de6af3c4-4ae4-4dc5-b67a-7b99528fdf16",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "={{ $json.attachments }}",
+        "name": "={{ $('Gmail Trigger').item.json.id }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "170VebdFimidbzAqyCtP8GeGyth6dJMHW",
+          "mode": "list",
+          "cachedResultName": "F1",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/170VebdFimidbzAqyCtP8GeGyth6dJMHW"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        976,
+        -16
+      ],
+      "id": "e856d472-42cf-43af-aa8d-761d83f9f7db",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "p4JE4pLW9taM1k9i",
+          "name": "Google Drive account 156"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1184,
+        -16
+      ],
+      "id": "a60c8151-460b-4eb4-9aeb-2397fc346c43",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "p4JE4pLW9taM1k9i",
+          "name": "Google Drive account 156"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        1392,
+        -16
+      ],
+      "id": "e276c449-56c2-47d4-afd6-34cd3deebbb8",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Based on the text decide if the text is about an invoice or not {{ $json.text }}.\n\nIf yes return \"yes\", if no return \"no\".Don't use any additional information.Always use small letters.",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.8,
+      "position": [
+        1600,
+        -16
+      ],
+      "id": "c9e5bc91-4ff8-459a-bacb-aa75991fa412",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1536,
+        192
+      ],
+      "id": "3e9fa636-7ae9-43c0-b0f3-da7dc53eca72",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "gs73MpcVIaHjpC8A",
+          "name": "OpenAi account 336"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// AI এর আউটপুট থেকে টেক্সট খুঁজে বের করা\nlet aiText = $json.text || \"\";\n\n// টেক্সট এর ভেতর 'yes' বা 'no' আছে কি না চেক করা\nlet finalStatus = aiText.toLowerCase().includes('yes') ? 'yes' : 'no';\n\nreturn {\n  status: finalStatus\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        -16
+      ],
+      "id": "d50d83d8-5cc0-4ba6-b2df-75a1efab422c",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "616350c4-d6d2-4f50-89e1-3caadb0f8339",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2160,
+        -16
+      ],
+      "id": "47bb01f7-3233-4ed2-b70c-8dbd2686c6a9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Download file').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2384,
+        208
+      ],
+      "id": "f94717af-c9b1-49ca-ad27-fbb6f5456860",
+      "name": "Delete a file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "p4JE4pLW9taM1k9i",
+          "name": "Google Drive account 156"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Extract the following information from the provided invoice text: {{ $('Extract from File').item.json.text }}.\n\nRequired fields:\n\ninvoice_name: The name of the person billed to.\n\ncompany_name: The merchant or sender name.\n\ninvoice_amount: The total amount paid with currency.\n\nsmall_description: A short summary of what the payment was for.\n\nFormat Rules:\n\nReturn ONLY a JSON object.\n\nDo not include any markdown formatting like ```json.\n\nIf any field is missing, use \"N/A\".\n\nexample:\n{\n  \"invoice_name\": \"Asadullah\",\n  \"company_name\": \"habluprogrammer\",\n  \"invoice_amount\": \"4000.00 BDT\",\n  \"small_description\": \"Online Course payment via Nagad\"\n}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2448,
+        -144
+      ],
+      "id": "46a6141e-93e1-4a51-8e1e-652e37ad8970",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2352,
+        48
+      ],
+      "id": "8d60f046-96cf-4761-a30f-1fff6c7eb6ad",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "gs73MpcVIaHjpC8A",
+          "name": "OpenAi account 336"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"invoice_name\": \"Asadullah\",\n  \"company_name\": \"habluprogrammer\",\n  \"invoice_amount\": \"4000.00 BDT\",\n  \"small_description\": \"Online Course payment via Nagad\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2624,
+        64
+      ],
+      "id": "f735c660-3ca3-4791-8441-e5934afc3683",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "2f2c73c8-e056-8087-a857-c4ab84aab30b",
+          "mode": "list",
+          "cachedResultName": "n8n detabase",
+          "cachedResultUrl": "https://www.notion.so/2f2c73c8e0568087a857c4ab84aab30b"
+        },
+        "title": "={{ $('Gmail Trigger').item.json.id }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Name|title",
+              "title": "={{ $json.output.invoice_name }}"
+            },
+            {
+              "key": "Company Name|rich_text",
+              "textContent": "={{ $json.output.company_name }}"
+            },
+            {
+              "key": "Invoice Amount|rich_text",
+              "textContent": "={{ $json.output.invoice_amount }}"
+            },
+            {
+              "key": "Description|rich_text",
+              "textContent": "={{ $json.output.small_description }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        2800,
+        -144
+      ],
+      "id": "f5fe64eb-6390-42df-8ed3-7b7b579637a0",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "060GpiBtt4jmxEXm",
+          "name": "Notion account 25"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "arunicorn2025@gmail.com",
+        "subject": "Your Last Report",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"utf-8\">\n    <style>\n        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }\n        .container { max-width: 600px; margin: 20px auto; border: 1px solid #eee; padding: 20px; border-radius: 8px; }\n        .header { border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }\n        .header h2 { color: #007bff; margin: 0; }\n        .invoice-details { margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-radius: 5px; }\n        .invoice-details p { margin: 5px 0; }\n        .table { width: 100%; border-collapse: collapse; margin-top: 10px; }\n        .table th { text-align: left; background: #eee; padding: 10px; border-bottom: 2px solid #ddd; }\n        .table td { padding: 10px; border-bottom: 1px solid #eee; }\n        .total { font-weight: bold; font-size: 1.2em; color: #d9534f; }\n        .footer { font-size: 12px; color: #777; margin-top: 30px; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }\n        .button { background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px; }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h2>Invoice Information</h2>\n        </div>\n        \n        <p>Hello <strong>{{ $('AI Agent').item.json.output.invoice_name }}</strong>,</p>\n        <p>Thank you for your transaction. Here are the details of your recent invoice:</p>\n        \n        <div class=\"invoice-details\">\n            <p><strong>Company:</strong> {{ $('AI Agent').item.json.output.small_description }}</p>\n            <p><strong>Status:</strong> Paid</p>\n        </div>\n\n        <table class=\"table\">\n            <thead>\n                <tr>\n                    <th>Description</th>\n                    <th>Amount</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr>\n                    <td>{{ $('AI Agent').item.json.output.small_description }}</td>\n                    <td class=\"total\">{{ $('AI Agent').item.json.output.invoice_amount }}</td>\n                </tr>\n            </tbody>\n        </table>\n\n        <p>If you have any questions regarding this invoice, please contact <strong>{{ $('Gmail Trigger').item.json.headers['reply-to'] }}</strong>.</p>\n        \n        <a href=\"https://my.sslcommerz.com\" class=\"button\">View Transaction History</a>\n\n        <div class=\"footer\">\n            <p>This is an automated message from {{ $json.property_company_name }}.<br>\n            Please do not reply directly to this email.</p>\n        </div>\n    </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3008,
+        -144
+      ],
+      "id": "3ed29d2d-2aa0-4a43-9a87-a744c24382e2",
+      "name": "Send a message",
+      "webhookId": "4d7ee7d2-7b5d-403e-aacf-fe49b425db9d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4tkr7krRxlTVGOM5",
+          "name": "Gmail account 314"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "d79eca75-51b8-45f7-8207-2ba448524f17",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f00bba974abf03cb5183d4d65f8a9645a781b04770df6a7d08284fca87d50b3"
+  },
+  "id": "oQCwthyFvB1Mj7ha",
+  "tags": []
+}
